@@ -1,5 +1,9 @@
 == Module changelog ==
 
+===  3.1.0 (03-17-14) ===
+
+* Importing images with watermark
+
 ===  3.0.1 (10-04-13) ===
 
 * Packaging for enterprise version

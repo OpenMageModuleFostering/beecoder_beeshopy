@@ -110,7 +110,7 @@ class Beecoder_Beeshopy_Model_Api extends Mage_Catalog_Model_Api_Resource
   /* Used to know if module is installed*/
   public function checkModule()
   {
-    return array("api_version" => '3.0.1', "magento_version" => Mage::getVersion());
+    return array("api_version" => '3.1.0', "magento_version" => Mage::getVersion());
   }
 
   /*Auxiliar functions*/
@@ -151,10 +151,7 @@ class Beecoder_Beeshopy_Model_Api extends Mage_Catalog_Model_Api_Resource
 
   private function getProductInfo($product, $store = null, $extra_params = array())
   {
-    /* Images */
-    $image_class = Mage::getModel('catalog/product_attribute_media_api'); 
-    $images = $image_class->items($product->getId(), $store);
-    
+    $images = $this->getImages($product);
     /* Custom Options */
     $options = $this->getCustomOptions($product);
     $links = $this->getDownloadableLinks($product);
@@ -275,6 +272,17 @@ class Beecoder_Beeshopy_Model_Api extends Mage_Catalog_Model_Api_Resource
       }
     }
     return $res;
+  }
+
+  private function getImages($product)
+  {
+    $image_class = Mage::getModel('catalog/product_attribute_media_api'); 
+    $images = array();
+    foreach ($image_class->items($product->getId(), $store) as $_image){
+      $_image['url'] = (string)Mage::Helper('catalog/image')->init($product, 'image', $_image['file']);
+      $images[] = $_image;
+    }
+    return $images;
   }
 
   private function getCustomOptions($product)
