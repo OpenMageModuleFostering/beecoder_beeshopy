@@ -110,7 +110,7 @@ class Beecoder_Beeshopy_Model_Api extends Mage_Catalog_Model_Api_Resource
   /* Used to know if module is installed*/
   public function checkModule()
   {
-    return array("api_version" => '3.1.0', "magento_version" => Mage::getVersion());
+    return array("api_version" => '3.1.5', "magento_version" => Mage::getVersion());
   }
 
   /*Auxiliar functions*/
@@ -162,13 +162,19 @@ class Beecoder_Beeshopy_Model_Api extends Mage_Catalog_Model_Api_Resource
 
     /* Prepare results */
     $in_stock = $product->getStockItem()->getIsInStock();
+
+    /* Formatted and WYSIWYG ready descriptions */
+    $_helper = Mage::helper('catalog/output');
+    $short_description = $_helper->productAttribute($product, nl2br($product->getShortDescription()), 'short_description');
+    $description = $_helper->productAttribute($product, nl2br($product->getDescription()), 'description');
+
     $result = array(
         'idx' => $product->getId(),
         'sku'        => $product->getSku(),
         'product_type'       => $product->getTypeId(),
         'body' => $product->getInDepth(),
-        'description' => $product->getDescription(),
-        'short_description' => $product->getShortDescription(),
+        'description' => $description,
+        'short_description' => $short_description,
         'title' => $product->getName(),
         'in_stock' => $in_stock,
         'qty' => $product->getStockItem()->getQty(),
